@@ -1,0 +1,397 @@
+/* --- Reset y Estilos Base --- */
+* {
+    box-sizing: border-box;
+    margin: 0;
+    padding: 0;
+}
+
+/* Tema Oscuro: Colores base */
+:root {
+    --bg-main: #121212; /* Fondo principal casi negro */
+    --bg-container: #1e1e1e; /* Fondo contenedor ligeramente más claro */
+    --bg-card: #2a2a2a; /* Fondo de tarjetas */
+    --text-primary: #e0e0e0; /* Texto principal claro */
+    --text-secondary: #a0a0a0; /* Texto secundario gris claro */
+    --text-heading: #ffffff; /* Texto de encabezados blanco */
+    --accent-blue: #5fa8d3; /* Azul acento más brillante para dark mode */
+    --accent-blue-dark: #1b4965; /* Azul oscuro para fondos/bordes */
+    --accent-green: #54d68a; /* Verde para correcto */
+    --accent-red: #ff6b6b; /* Rojo para incorrecto */
+    --border-color: #444444; /* Color de borde sutil */
+    --shadow-color: rgba(255, 255, 255, 0.05); /* Sombra muy sutil */
+}
+
+body {
+    font-family: 'Inter', sans-serif;
+    background-color: var(--bg-main); /* Fondo oscuro */
+    color: var(--text-primary); /* Texto claro */
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    min-height: 100vh;
+    padding: 20px;
+}
+
+/* Contenedor principal de la aplicación */
+.app-container {
+    width: 100%;
+    max-width: 800px;
+    background-color: var(--bg-container); /* Fondo contenedor oscuro */
+    border-radius: 16px;
+    box-shadow: 0 8px 25px rgba(0, 0, 0, 0.3); /* Sombra más oscura */
+    overflow: hidden;
+    position: relative;
+    border: 1px solid var(--border-color); /* Borde sutil */
+}
+
+/* --- Pantallas (Selección, Quiz, Resultados) --- */
+.module-selection,
+.quiz-container,
+.results-container {
+    padding: 30px 40px;
+    text-align: center;
+    display: none; /* Ocultas por defecto */
+}
+
+.active-screen {
+    display: block;
+}
+
+/* --- Pantalla Selección de Módulo --- */
+.module-selection h1 {
+    color: var(--text-heading); /* Texto blanco */
+    margin-bottom: 30px;
+    font-weight: 700;
+}
+
+.module-options {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+    gap: 20px;
+}
+
+.module-button {
+    padding: 25px 15px;
+    font-size: 1.1em;
+    font-weight: 600;
+    color: var(--text-heading); /* Texto blanco */
+    /* Gradiente oscuro o color sólido */
+    background: linear-gradient(135deg, #334155, #1e293b); /* Gradiente gris-azulado oscuro */
+    border: 1px solid var(--border-color);
+    border-radius: 12px;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    box-shadow: 0 4px 10px rgba(0, 0, 0, 0.2);
+}
+
+.module-button:hover {
+    transform: translateY(-3px);
+    box-shadow: 0 6px 15px rgba(0, 0, 0, 0.3);
+    background: linear-gradient(135deg, #475569, #334155); /* Más claro al pasar */
+    border-color: #555;
+}
+
+/* --- Pantalla del Quiz --- */
+.quiz-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 25px;
+    flex-wrap: wrap;
+    gap: 15px;
+    border-bottom: 1px solid var(--border-color); /* Línea divisoria */
+    padding-bottom: 15px;
+}
+
+.back-button {
+    background: none;
+    border: 1px solid transparent; /* Borde transparente para mantener tamaño */
+    color: var(--text-secondary); /* Gris claro */
+    font-size: 0.9em;
+    cursor: pointer;
+    padding: 5px 10px;
+    border-radius: 6px;
+    transition: all 0.2s ease;
+}
+.back-button:hover {
+    background-color: rgba(255, 255, 255, 0.1); /* Fondo claro sutil */
+    color: var(--text-primary);
+    border-color: var(--border-color);
+}
+
+#progress-container {
+    font-size: 0.9em;
+    color: var(--text-secondary);
+    text-align: center;
+    flex-grow: 1;
+}
+
+#progress-bar-full {
+    width: 100%;
+    max-width: 300px;
+    height: 8px;
+    background-color: #333; /* Fondo barra oscuro */
+    border-radius: 4px;
+    overflow: hidden;
+    margin: 5px auto 0 auto;
+    border: 1px solid #444;
+}
+
+#progress-bar {
+    height: 100%;
+    width: 0%;
+    background-color: var(--accent-blue); /* Azul acento */
+    border-radius: 4px;
+    transition: width 0.4s ease-in-out;
+}
+
+#score-container {
+    font-size: 1em;
+    font-weight: 600;
+    color: var(--accent-blue); /* Azul acento */
+    background-color: rgba(95, 168, 211, 0.1); /* Fondo azul muy transparente */
+    padding: 5px 12px;
+    border-radius: 8px;
+    border: 1px solid rgba(95, 168, 211, 0.3);
+}
+
+/* Tarjeta de Pregunta */
+.question-card {
+    background-color: var(--accent-blue-dark); /* Fondo azul oscuro */
+    color: var(--text-heading); /* Texto blanco */
+    padding: 25px;
+    margin-bottom: 30px;
+    border-left: 5px solid var(--accent-blue); /* Borde azul acento */
+    text-align: left;
+    border-radius: 8px;
+}
+
+#question-text {
+    font-size: 1.25em;
+    font-weight: 600;
+    line-height: 1.5;
+}
+
+/* Contenedor de Opciones */
+.options-container {
+    display: grid;
+    grid-template-columns: 1fr;
+    gap: 15px;
+    margin-bottom: 25px;
+}
+
+/* Tarjeta de Opción */
+.option-card {
+    background-color: var(--bg-card); /* Fondo tarjeta oscuro */
+    border: 1px solid var(--border-color); /* Borde gris oscuro */
+    border-radius: 10px;
+    padding: 18px 20px;
+    font-size: 1em;
+    color: var(--text-primary); /* Texto claro */
+    cursor: pointer;
+    transition: all 0.2s ease;
+    text-align: left;
+    width: 100%;
+    box-shadow: 0 2px 5px var(--shadow-color);
+    position: relative;
+    overflow: hidden;
+    line-height: 1.4;
+    min-height: 60px;
+    display: flex;
+    align-items: center;
+}
+
+.option-card:hover:not(.disabled):not(.correct):not(.incorrect) {
+    border-color: var(--accent-blue); /* Borde azul acento */
+    background-color: #3a3a3a; /* Fondo tarjeta ligeramente más claro */
+    transform: translateY(-2px);
+    box-shadow: 0 4px 10px var(--shadow-color);
+}
+
+.option-card.disabled {
+    cursor: not-allowed;
+    opacity: 0.6; /* Más opacidad para mejor visibilidad en oscuro */
+}
+
+/* Estilos Feedback (Correcto/Incorrecto) en Tarjetas */
+.option-card.correct {
+    background-color: rgba(84, 214, 138, 0.1); /* Fondo verde muy sutil */
+    border-color: var(--accent-green); /* Borde verde */
+    color: var(--accent-green); /* Texto verde */
+    font-weight: 600;
+}
+
+.option-card.incorrect {
+    background-color: rgba(255, 107, 107, 0.1); /* Fondo rojo muy sutil */
+    border-color: var(--accent-red); /* Borde rojo */
+    color: var(--accent-red); /* Texto rojo */
+    font-weight: 600;
+    animation: shake 0.5s ease-in-out;
+}
+
+/* Animación Shake (sin cambios) */
+@keyframes shake {
+  0%, 100% { transform: translateX(0); }
+  25% { transform: translateX(-5px); }
+  50% { transform: translateX(5px); }
+  75% { transform: translateX(-5px); }
+}
+
+/* Indicador de Feedback */
+.feedback-indicator {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 8px;
+    margin-top: 15px;
+    margin-bottom: 20px;
+    min-height: 24px;
+    font-weight: 600;
+    font-size: 1em;
+}
+
+.indicator-dot {
+    width: 12px;
+    height: 12px;
+    border-radius: 50%;
+    background-color: transparent;
+    transition: background-color 0.3s ease;
+}
+
+.feedback-indicator.correct .indicator-dot {
+    background-color: var(--accent-green); /* Verde */
+}
+.feedback-indicator.correct #feedback-text {
+    color: var(--accent-green); /* Verde */
+}
+
+.feedback-indicator.incorrect .indicator-dot {
+    background-color: var(--accent-red); /* Rojo */
+}
+.feedback-indicator.incorrect #feedback-text {
+    color: var(--accent-red); /* Rojo */
+}
+
+/* Footer del Quiz */
+.quiz-footer {
+    margin-top: 20px;
+    text-align: right;
+}
+
+/* Botones Generales */
+.btn {
+    padding: 12px 30px;
+    border: none;
+    border-radius: 8px;
+    font-size: 1em;
+    font-weight: 600;
+    cursor: pointer;
+    transition: all 0.2s ease;
+    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.2); /* Sombra oscura */
+}
+
+.btn:active {
+    transform: scale(0.98);
+    box-shadow: 0 1px 3px rgba(0, 0, 0, 0.2);
+}
+
+.btn-next {
+    background-color: var(--accent-blue); /* Azul acento */
+    color: #111; /* Texto oscuro para contraste con azul claro */
+}
+.btn-next:hover:not(:disabled) {
+    background-color: #7fc8f8; /* Azul más claro */
+    box-shadow: 0 4px 8px rgba(95, 168, 211, 0.3);
+}
+.btn-next:disabled {
+    background-color: #444; /* Gris oscuro deshabilitado */
+    color: #888;
+    cursor: not-allowed;
+    box-shadow: none;
+}
+
+/* --- Pantalla de Resultados --- */
+.results-container h2 {
+    color: var(--text-heading); /* Blanco */
+    margin-bottom: 15px;
+}
+.results-container p {
+    font-size: 1.2em;
+    margin-bottom: 30px;
+    color: var(--text-primary);
+}
+.results-container span {
+    font-weight: 700;
+    color: var(--accent-blue); /* Resalta números en azul */
+}
+
+.results-buttons {
+    display: flex;
+    justify-content: center;
+    gap: 15px;
+    flex-wrap: wrap;
+}
+
+.btn-restart {
+    background-color: var(--accent-green); /* Verde */
+    color: #111; /* Texto oscuro */
+}
+.btn-restart:hover {
+    background-color: #6ee7b7; /* Verde más claro */
+    box-shadow: 0 4px 8px rgba(84, 214, 138, 0.3);
+}
+
+.btn-secondary {
+    background-color: #555; /* Gris medio */
+    color: var(--text-heading); /* Blanco */
+}
+.btn-secondary:hover {
+    background-color: #777; /* Gris más claro */
+}
+
+/* --- Responsividad (Ajustes menores para dark mode si son necesarios) --- */
+@media (max-width: 768px) {
+    .app-container {
+        margin: 10px;
+        padding: 0;
+        border-radius: 12px;
+    }
+    .module-selection,
+    .quiz-container,
+    .results-container {
+        padding: 20px;
+    }
+    .quiz-header {
+       flex-direction: column;
+       align-items: stretch;
+    }
+    #score-container {
+        text-align: center;
+        margin-top: 10px;
+    }
+    #question-text {
+        font-size: 1.15em;
+    }
+    .option-card {
+        padding: 15px;
+        font-size: 0.95em;
+    }
+    .quiz-footer {
+        text-align: center;
+    }
+}
+
+@media (max-width: 480px) {
+    .module-options {
+        grid-template-columns: 1fr;
+    }
+     .module-button {
+        padding: 20px 15px;
+    }
+    .results-buttons {
+        flex-direction: column;
+    }
+    .btn {
+        width: 100%;
+    }
+}

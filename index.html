@@ -1,0 +1,69 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Quiz: Articulación de Saberes</title>
+    <link rel="stylesheet" href="style.css">
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700&display=swap" rel="stylesheet">
+</head>
+<body>
+
+
+    <div class="app-container">
+
+        <div id="module-selection-screen" class="module-selection active-screen">
+            <h2 class="screen-title">Articulación de saberes</h2>
+            
+            <div class="module-options">
+                <button class="module-button" data-module="1">Módulo 1</button>
+                <button class="module-button" data-module="2">Módulo 2</button>
+                <button class="module-button" data-module="3">Módulo 3</button>
+                <button class="module-button" data-module="all">Todos los Módulos</button>
+            </div>
+        </div>
+
+        <div id="quiz-screen" class="quiz-container">
+            <div class="quiz-header">
+                <button id="back-to-selection" class="back-button">&larr; Elegir Módulo</button>
+                <div id="progress-container">
+                    <p>Pregunta <span id="question-number">0</span> de <span id="total-questions">0</span></p>
+                    <div id="progress-bar-full">
+                        <div id="progress-bar"></div> </div>
+                </div>
+                <div id="score-container">
+                    Puntaje: <span id="current-score">0</span>
+                </div>
+            </div>
+
+            <div id="question-card" class="card question-card">
+                <p id="question-text">Cargando pregunta...</p>
+            </div>
+
+            <div id="options-container" class="options-container">
+                </div>
+
+            <div id="feedback-indicator" class="feedback-indicator">
+                 <span class="indicator-dot"></span> <p id="feedback-text"></p> </div>
+
+            <div class="quiz-footer">
+                 <button id="next-button" class="btn btn-next" disabled>Siguiente Pregunta</button>
+            </div>
+        </div>
+
+         <div id="results-screen" class="results-container">
+            <h2 class="screen-title">¡Quiz Completado!</h2>
+            <p>Tu puntaje final es: <span id="final-score">0</span> de <span id="total-score">0</span></p>
+            <div class="results-buttons">
+                <button id="restart-quiz-button" class="btn btn-restart">Estudiar Mismo Módulo</button>
+                <button id="restart-all-button" class="btn btn-secondary">Elegir Otro Módulo</button>
+            </div>
+        </div>
+
+    </div>
+
+    <script src="script.js"></script>
+</body>
+</html>
