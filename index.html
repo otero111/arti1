@@ -3,67 +3,702 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Quiz: Articulación de Saberes</title>
-    <link rel="stylesheet" href="style.css">
-    <link rel="preconnect" href="https://fonts.googleapis.com">
-    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700&display=swap" rel="stylesheet">
+    <title>Desafío ARTICULACION DE SABERES (Completo)</title>
+    <style>
+        /* --- Estilos Generales y Tema Oscuro --- */
+        :root {
+            --color-fondo: #121212;
+            --color-superficie: #1e1e1e;
+            --color-borde: #333;
+            --texto-principal: #e0e0e0;
+            --texto-secundario: #a0a0a0;
+            --color-acento: #03dac6; /* Cyan verdoso */
+            --color-correcto: #4caf50; /* Verde */
+            --color-incorrecto: #cf6679; /* Rojo suave */
+        }
+
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+        }
+
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif, "Apple Color Emoji", "Segoe UI Emoji", "Segoe UI Symbol";
+            background-color: var(--color-fondo);
+            color: var(--texto-principal);
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+            padding: 20px;
+        }
+
+        /* --- Contenedor Principal --- */
+        .quiz-container {
+            background-color: var(--color-superficie);
+            border-radius: 15px;
+            box-shadow: 0 10px 20px rgba(0, 0, 0, 0.3);
+            width: 100%;
+            max-width: 800px;
+            overflow: hidden;
+            border: 1px solid var(--color-borde);
+        }
+
+        .pantalla {
+            padding: 30px 40px;
+            transition: opacity 0.5s;
+        }
+
+        /* --- Pantalla de Inicio --- */
+        #pantalla-inicio h1 {
+            color: var(--color-acento);
+            text-align: center;
+            margin-bottom: 15px;
+            font-size: 2.2rem;
+            font-weight: 700;
+        }
+
+        #pantalla-inicio p {
+            text-align: center;
+            color: var(--texto-secundario);
+            margin-bottom: 30px;
+            font-size: 1.1rem;
+        }
+
+        .seleccion-documentos {
+            margin-bottom: 30px;
+        }
+
+        .seleccion-documentos h2 {
+            text-align: center;
+            margin-bottom: 20px;
+            font-weight: 500;
+        }
+
+        .opciones-docs {
+            display: flex;
+            flex-wrap: wrap;
+            justify-content: center;
+            gap: 15px;
+        }
+
+        .opciones-docs label {
+            background-color: var(--color-fondo);
+            border: 1px solid var(--color-borde);
+            padding: 10px 20px;
+            border-radius: 25px;
+            cursor: pointer;
+            transition: background-color 0.3s, border-color 0.3s;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            user-select: none;
+        }
+
+        .opciones-docs input[type="checkbox"] {
+            display: none;
+        }
+
+        .opciones-docs input[type="checkbox"]:checked + label {
+            background-color: var(--color-acento);
+            border-color: var(--color-acento);
+            color: var(--color-fondo);
+            font-weight: bold;
+        }
+
+        .opciones-docs label:hover {
+            background-color: #2a2a2a;
+        }
+
+        /* --- Botones --- */
+        .btn {
+            display: block;
+            width: 100%;
+            padding: 15px;
+            font-size: 1rem; /* Ajustado para opciones más largas */
+            font-weight: bold;
+            color: var(--color-fondo);
+            background-color: var(--color-acento);
+            border: none;
+            border-radius: 8px;
+            cursor: pointer;
+            transition: transform 0.2s, box-shadow 0.2s;
+            margin-top: 10px; /* Ajustado */
+            text-align: left; /* Alineado a la izquierda para opciones */
+            line-height: 1.4;
+        }
+        
+        #btn-iniciar {
+            font-size: 1.2rem;
+            text-align: center;
+        }
+
+
+        .btn:hover:not(:disabled) {
+            transform: translateY(-2px);
+            box-shadow: 0 4px 15px rgba(3, 218, 198, 0.2);
+        }
+        
+        .btn:disabled {
+            background-color: #555;
+            cursor: not-allowed;
+            color: #888;
+        }
+
+        /* --- Pantalla del Quiz --- */
+        #pantalla-quiz {
+            display: none;
+        }
+        
+        .quiz-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 30px;
+            color: var(--texto-secundario);
+            font-weight: bold;
+            flex-wrap: wrap;
+            gap: 10px;
+        }
+
+        .pregunta-wrapper {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 15px;
+            margin-bottom: 30px;
+        }
+
+        #texto-pregunta {
+            font-size: 1.4rem;
+            line-height: 1.6;
+            text-align: center;
+            min-height: 100px;
+            flex-grow: 1;
+        }
+        
+        #btn-leer-pregunta {
+            background: none;
+            border: 1px solid var(--color-borde);
+            border-radius: 50%;
+            width: 44px;
+            height: 44px;
+            cursor: pointer;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            transition: background-color 0.3s, border-color 0.3s;
+            padding: 0;
+            flex-shrink: 0;
+        }
+
+        #btn-leer-pregunta:hover {
+             background-color: #2a2a2a;
+        }
+        
+        #btn-leer-pregunta.activo {
+            border-color: var(--color-acento);
+        }
+
+        #btn-leer-pregunta svg {
+            width: 22px;
+            height: 22px;
+            fill: var(--texto-secundario);
+            transition: fill 0.3s;
+        }
+        
+        #btn-leer-pregunta.activo svg {
+            fill: var(--color-acento);
+        }
+
+        .opciones-respuesta {
+            display: grid;
+            grid-template-columns: 1fr; /* Cambiado a una columna */
+            gap: 15px; /* Reducido el gap */
+        }
+
+        .opciones-respuesta .btn {
+            background-color: #333;
+            color: var(--texto-principal);
+        }
+        .opciones-respuesta .btn:hover:not(:disabled) {
+            background-color: #444;
+        }
+        .opciones-respuesta .btn.correcto {
+            background-color: var(--color-correcto);
+            color: white;
+        }
+        .opciones-respuesta .btn.incorrecto {
+            background-color: var(--color-incorrecto);
+            color: white;
+        }
+
+        #feedback {
+            margin-top: 30px;
+            padding: 20px;
+            border-radius: 8px;
+            text-align: center;
+            min-height: 150px;
+            border: 1px solid transparent;
+        }
+
+        #feedback.correcto {
+            border-color: var(--color-correcto);
+        }
+
+        #feedback.incorrecto {
+            border-color: var(--color-incorrecto);
+        }
+        
+        #feedback h3 {
+            margin-bottom: 10px;
+        }
+
+        #feedback .justificacion {
+            margin-top: 10px;
+            color: var(--texto-secundario);
+            font-style: italic;
+            text-align: left;
+        }
+        
+        #feedback .fuente-pregunta {
+            margin-top: 15px;
+            font-size: 0.8rem;
+            color: #777;
+            text-align: left;
+        }
+
+        #btn-siguiente {
+            background-color: var(--color-borde);
+            color: var(--texto-principal);
+            font-size: 1rem;
+            padding: 12px;
+            width: auto;
+            min-width: 180px;
+            margin-left: auto;
+            margin-right: auto;
+            text-align: center;
+        }
+
+        /* --- Pantalla Final --- */
+        #pantalla-final {
+            display: none;
+            text-align: center;
+        }
+
+        #pantalla-final h2 {
+            font-size: 2.2rem;
+            margin-bottom: 20px;
+            color: var(--color-acento);
+        }
+
+        #mensaje-final {
+            font-size: 1.5rem;
+            margin-bottom: 15px;
+        }
+        
+        #puntuacion-final-texto {
+             font-size: 1.2rem;
+             color: var(--texto-secundario);
+             margin-bottom: 30px;
+        }
+        
+        #btn-reiniciar {
+            background-color: #333;
+            color: var(--texto-principal);
+            text-align: center;
+        }
+
+    </style>
 </head>
 <body>
 
-
-    <div class="app-container">
-
-        <div id="module-selection-screen" class="module-selection active-screen">
-            <h2 class="screen-title">Articulación de saberes</h2>
+    <div class="quiz-container">
+        
+        <!-- Pantalla 1: Bienvenida y Selección de Módulos -->
+        <div id="pantalla-inicio" class="pantalla">
+            <h1>Desafío ARTI 1</h1>
+            <p>Pon a prueba tu conocimiento sobre Articulación de Saberes 1.</p>
             
-            <div class="module-options">
-                <button class="module-button" data-module="1">Módulo 1</button>
-                <button class="module-button" data-module="2">Módulo 2</button>
-                <button class="module-button" data-module="3">Módulo 3</button>
-                <button class="module-button" data-module="all">Todos los Módulos</button>
+            <div class="seleccion-documentos">
+                <h2>Elige los módulos para el quiz:</h2>
+                <div class="opciones-docs" id="opciones-documentos">
+                    <!-- Las opciones se generarán con JS -->
+                </div>
             </div>
+
+            <button id="btn-iniciar" class="btn">Comenzar Juego</button>
+            <p id="error-seleccion" style="color: var(--color-incorrecto); text-align: center; margin-top: 15px; display: none;">Por favor, selecciona al menos un módulo.</p>
         </div>
 
-        <div id="quiz-screen" class="quiz-container">
+        <!-- Pantalla 2: El Quiz -->
+        <div id="pantalla-quiz" class="pantalla">
             <div class="quiz-header">
-                <button id="back-to-selection" class="back-button">&larr; Elegir Módulo</button>
-                <div id="progress-container">
-                    <p>Pregunta <span id="question-number">0</span> de <span id="total-questions">0</span></p>
-                    <div id="progress-bar-full">
-                        <div id="progress-bar"></div> </div>
-                </div>
-                <div id="score-container">
-                    Puntaje: <span id="current-score">0</span>
-                </div>
+                <span id="contador-pregunta">Pregunta X de Y</span>
+                <span id="preguntas-restantes">Quedan: Y</span>
+                <span id="puntuacion-actual">Puntuación: 0</span>
             </div>
-
-            <div id="question-card" class="card question-card">
-                <p id="question-text">Cargando pregunta...</p>
+            <div class="pregunta-wrapper">
+                <p id="texto-pregunta">Aquí va la pregunta...</p>
+                <button id="btn-leer-pregunta" title="Activar/Desactivar lectura en voz alta">
+                    <span id="icono-volumen-on">
+                        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor"><path d="M3 9v6h4l5 5V4L7 9H3zm13.5 3c0-1.77-1.02-3.29-2.5-4.03v8.05c1.48-.73 2.5-2.25 2.5-4.02zM14 3.23v2.06c2.89.86 5 3.54 5 6.71s-2.11 5.85-5 6.71v2.06c4.01-.91 7-4.49 7-8.77s-2.99-7.86-7-8.77z"></path></svg>
+                    </span>
+                    <span id="icono-volumen-off" style="display: none;">
+                        <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor"><path d="M16.5 12c0-1.77-1.02-3.29-2.5-4.03v2.21l2.45 2.45c.03-.2.05-.41.05-.63zm2.5 0c0 .94-.2 1.82-.54 2.64l1.51 1.51C20.63 14.91 21 13.5 21 12c0-4.28-2.99-7.86-7-8.77v2.06c2.89.86 5 3.54 5 6.71zM4.27 3L3 4.27 7.73 9H3v6h4l5 5v-6.73l4.25 4.25c-.67.52-1.42.93-2.25 1.18v2.06c1.38-.31 2.63-.95 3.69-1.81L19.73 21 21 19.73l-9-9L4.27 3zM12 4L9.91 6.09 12 8.18V4z"></path></svg>
+                    </span>
+                </button>
             </div>
-
-            <div id="options-container" class="options-container">
-                </div>
-
-            <div id="feedback-indicator" class="feedback-indicator">
-                 <span class="indicator-dot"></span> <p id="feedback-text"></p> </div>
-
-            <div class="quiz-footer">
-                 <button id="next-button" class="btn btn-next" disabled>Siguiente Pregunta</button>
+            <div id="opciones-respuesta" class="opciones-respuesta">
+                <!-- Los botones de opciones se generarán aquí -->
+            </div>
+            <div id="feedback">
+                 <!-- El feedback y el botón Siguiente aparecerán aquí -->
             </div>
         </div>
 
-         <div id="results-screen" class="results-container">
-            <h2 class="screen-title">¡Quiz Completado!</h2>
-            <p>Tu puntaje final es: <span id="final-score">0</span> de <span id="total-score">0</span></p>
-            <div class="results-buttons">
-                <button id="restart-quiz-button" class="btn btn-restart">Estudiar Mismo Módulo</button>
-                <button id="restart-all-button" class="btn btn-secondary">Elegir Otro Módulo</button>
-            </div>
+        <!-- Pantalla 3: Resultado Final -->
+        <div id="pantalla-final" class="pantalla">
+            <h2>Fin del Juego</h2>
+            <p id="mensaje-final">¡Excelente!</p>
+            <p id="puntuacion-final-texto">Tu puntuación final es: X / Y</p>
+            <button id="btn-reiniciar" class="btn">Jugar de Nuevo</button>
         </div>
 
     </div>
 
-    <script src="script.js"></script>
+    <script>
+    // --- BASE DE DATOS COMPLETA DE PREGUNTAS ---
+    const preguntas_db = {
+        '1': [
+            // Módulo 1
+            {'pregunta': 'Uno de los aspectos que condiciona de manera significativa la aparición del individuo como formación subjetiva es, según Raggio:', 'opciones': ['La ideología comunitarista, que privilegiaba la predominancia de los intereses colectivos.', 'La ideología liberal que presupone el Contrato Social, en tanto protector de la libertad y los bienes de la persona.', 'La ideología que legitima la sujeción de la fuerza de trabajo al feudo.'], 'respuesta': 'La ideología liberal que presupone el Contrato Social, en tanto protector de la libertad y los bienes de la persona.', 'justificacion': 'Raggio explica que la noción de "individuo" como la entendemos hoy no es natural, sino una construcción histórica propia de la modernidad. La ideología liberal, a través de figuras como el Contrato Social de Rousseau, es clave en este proceso, pues presupone sujetos con una libertad innata, independientes unos de otros, y busca una forma de asociación que proteja la libertad y los bienes de cada persona, consagrando así al individuo como la partícula fundamental de la sociedad.', 'fuente': 'Examen Art I Feb 2024.pdf / Arti 1 - primer parcial junio.pdf'},
+            {'pregunta': 'De acuerdo a Raggio, el efecto paradojal del Contrato Social, se visualiza:', 'opciones': ['En el hecho de que consagra tanto la protección de los bienes de cada asociado, así como su propia libertad.', 'En el hecho de que establece una nueva forma de concebir al individuo, a la par que menoscaba su libertad.', 'En el hecho de que al presuponer una libertad innata a los sujetos y concebirlos como independientes unos de otros, legitima tal independencia.'], 'respuesta': 'En el hecho de que al presuponer una libertad innata a los sujetos y concebirlos como independientes unos de otros, legitima tal independencia.', 'justificacion': 'Raggio describe el Contrato Social como una figura con un "efecto paradojal" porque, al mismo tiempo que conecta a los sujetos para formar una comunidad, los separa y legitima como entidades autónomas y preexistentes a esa comunidad. Presupone la independencia para luego unirla, reforzando la idea del individuo como punto de partida.', 'fuente': 'Arti 1 - primer parcial junio.pdf'},
+            {'pregunta': 'Giddens, refiriéndose a las circunstancias sociales, afirma que:', 'opciones': ['Las mismas no están separadas de la vida personal, ni constituyen un orden externo a ella.', 'Dichas circunstancias ofrecen un contexto externo a los sujetos, que les permite a éstos darle sentido a sus prácticas sociales.', 'Las mismas, influyen la vida personal de los sujetos, sin que esto signifique una introducción en la identidad del yo (sí mismo).'], 'respuesta': 'Las mismas no están separadas de la vida personal, ni constituyen un orden externo a ella.', 'justificacion': 'Giddens critica la visión de que la sociedad es una estructura externa que se impone a los individuos. Para él, las circunstancias sociales son producidas y reproducidas activamente por los individuos en su vida cotidiana. Al enfrentar sus problemas personales, los sujetos ayudan a reconstruir el universo social.', 'fuente': 'Arti 1 - primer parcial junio.pdf'},
+            {'pregunta': 'Para el sociólogo Anthony Giddens el carácter singularmente dinámico de la vida social moderna responde a tres componentes:', 'opciones': ['La familia, la religión y el Estado.', 'La separación tiempo y espacio, el desenclave de las instituciones sociales y la reflexividad.', 'La industrialización, la urbanización y la burocracia.'], 'respuesta': 'La separación tiempo y espacio, el desenclave de las instituciones sociales y la reflexividad.', 'justificacion': 'Giddens identifica estos tres elementos como los motores del dinamismo de la modernidad. 1) La separación tiempo-espacio permite interacciones a distancia. 2) El desenclave libera a las relaciones sociales de los contextos locales a través de sistemas abstractos (dinero, expertos). 3) La reflexividad implica que las prácticas sociales son constantemente examinadas y reformadas a la luz de nueva información.', 'fuente': 'Arti 1 - primer parcial junio.pdf'},
+            {'pregunta': 'Para Anthony Giddens la identidad del yo (self):', 'opciones': ['Es una esencia fija determinada por la tradición.', 'Constituye una trayectoria a través de los diferentes órdenes institucionales de la modernidad.', 'Se disuelve completamente en los sistemas abstractos.'], 'respuesta': 'Constituye una trayectoria a través de los diferentes órdenes institucionales de la modernidad.', 'justificacion': 'En la modernidad, la identidad ya no está dada por la tradición. Se convierte en un "proyecto reflejo", una biografía que cada individuo debe construir activamente. Esta construcción es una "trayectoria" que se traza a través de los diversos marcos institucionales (familia, escuela, trabajo, etc.), donde el yo se organiza y reorganiza reflexivamente.', 'fuente': 'Arti 1 - primer parcial junio.pdf'},
+            {'pregunta': 'Para Marx, el sujeto emergente de las sociedades de libre concurrencia (formaciones económico-sociales capitalistas):', 'opciones': ['Se presenta como desprendido de las relaciones sociales que hacían de él parte integrante de conjuntos humanos específicos.', 'Aparece formando parte de nuevos grupos sociales como consecuencia del efecto conectivo del contrato social de Rousseau.', 'Deriva de las formaciones sociales feudales.'], 'respuesta': 'Se presenta como desprendido de las relaciones sociales que hacían de él parte integrante de conjuntos humanos específicos.', 'justificacion': 'Marx explica que en el siglo XVIII, con la "sociedad civil", el individuo aparece como desprendido de los lazos naturales y comunitarios (familia, tribu, feudo) que lo definían en épocas anteriores. En la sociedad capitalista, las conexiones sociales se le presentan como un simple medio para sus fines privados.', 'fuente': 'Examen Art I Feb 2024.pdf'},
+            {'pregunta': 'Ana María Fernández -en relación a la problemática grupal- dice que se hace necesario someter a elucidación crítica dos ficciones:', 'opciones': ['La ficción del grupo como un todo y la ficción de la sociedad como una estructura.', 'La ficción del individuo que impide pensar cualquier plus grupal y la ficción del grupo como intencionalidad, con deseos o sentimientos.', 'La ficción del psicologismo y la ficción del sociologismo.'], 'respuesta': 'La ficción del individuo que impide pensar cualquier plus grupal y la ficción del grupo como intencionalidad, con deseos o sentimientos.', 'justificacion': 'Fernández argumenta que para pensar correctamente lo grupal hay que deconstruir dos ideas erróneas: 1) La ficción del "individuo" como única realidad, que no permite ver que en un grupo sucede algo más que la suma de sus partes. 2) La ficción del "grupo como un todo con mente propia" (falacia antropomórfica), que le atribuye intenciones, deseos o sentimientos como si fuera un súper-individuo.', 'fuente': 'Arti 1 - primer parcial junio.pdf'},
+            {'pregunta': 'Según Marx, las nuevas formaciones sociales modernas (sociedad civil), las diferentes formas de conexión social:', 'opciones': ['Se le presentan al sujeto como medio para alcanzar fines básicamente colectivos.', 'Aparecen ante los sujetos como un simple medio para lograr fines privados.', 'Se presentan a los sujetos como formas de construir nuevas modalidades de comunidad.'], 'respuesta': 'Aparecen ante los sujetos como un simple medio para lograr fines privados.', 'justificacion': 'En la "Introducción" a los Grundrisse, Marx describe cómo en la "sociedad civil" del siglo XVIII, las diversas formas de conexión social (el mercado, el estado) aparecen ante el individuo como una "necesidad exterior", un simple medio para conseguir sus fines privados, en contraste con épocas anteriores donde el individuo era parte integrante de un todo mayor.', 'fuente': 'ARTICULACIONES JULIO 2022 EXAMEN PROP 2.pdf'},
+            {'pregunta': 'Según los planteos de Ana María Fernández la noción de individuo surge:', 'opciones': ['Con el surgimiento del psicoanálisis y su descubrimiento del mundo psíquico.', 'En Occidente en el marco del capitalismo, cuando se comienza a pensar a la sociedad como un conjunto de productores (pensadores) libres.', 'Por la necesidad de la fe para el control moral de los sujetos.'], 'respuesta': 'En Occidente en el marco del capitalismo, cuando se comienza a pensar a la sociedad como un conjunto de productores (pensadores) libres.', 'justificacion': 'Fernández sitúa históricamente el surgimiento de la noción de individuo en el contexto del capitalismo naciente en Europa (siglos XVII-XVIII). Es en ese momento que la "sociedad" es pensada como un conjunto de productores libres, y las filosofías del sujeto (como el racionalismo) sustentan la idea de un individuo autónomo, base del libre mercado y del contrato social.', 'fuente': 'Arti 1 - primer parcial junio.pdf'},
+            {'pregunta': 'En el texto El campo grupal, Ana María Fernández retoma lo que Asch denominó "la falacia antropomórfica de la tesis de la mentalidad de grupo", esto hace referencia a:', 'opciones': ['La falacia de que la mentalidad de grupo otorga direccionalidad e intencionalidad a los momentos grupales.', 'La falacia de que los grupos pueden ser más que la suma de individualidades.', 'La falacia de que no existe la mentalidad de grupo pero que sí se otorga direccionalidad por el inconsciente colectivo.'], 'respuesta': 'La falacia de que la mentalidad de grupo otorga direccionalidad e intencionalidad a los momentos grupales.', 'justificacion': 'La "tesis de la mentalidad de grupo" (Durkheim, McDougall) reaccionó al individualismo afirmando que en los grupos surgen fenómenos propios. Sin embargo, según critica Asch, cayeron en la "falacia antropomórfica" al atribuirle al grupo una mente, intenciones, deseos o sentimientos como si fuera una persona (anthropos), un supra-individuo.', 'fuente': 'Examen articulacion de saberes 1 preguntas.pdf'},
+            {'pregunta': 'Para Juan Carlos De Brasi lo social-histórico:', 'opciones': ['Está naturalmente separado de nuestra existencia individual.', 'Es la materia misma con la que está tramado el inconsciente.', 'Es aquello que de una forma u otra va a influenciar nuestra vida íntima.'], 'respuesta': 'Es la materia misma con la que está tramado el inconsciente.', 'justificacion': 'Esta afirmación, citada por Raggio, es fundamental para romper el dualismo adentro/afuera. Sostiene que lo social-histórico no es una fuerza externa que influye en un psiquismo ya formado, sino que es constitutivo de la subjetividad misma, la materia prima del inconsciente. No hay un "adentro" psíquico puro separado de un "afuera" social.', 'fuente': 'Examen articulacion de saberes 1 preguntas.pdf'},
+            {'pregunta': 'La perspectiva teórica desarrollada por Marx en la crítica del individuo autónomo en su Introducción a los Elementos fundamentales para la crítica de la economía política se basa en:', 'opciones': ['Una perspectiva histórica.', 'Los desarrollos de Rousseau plasmados en El contrato social.', 'La idea de conectar individuo y sociedad.'], 'respuesta': 'Una perspectiva histórica.', 'justificacion': 'Marx critica las "robinsonadas" del siglo XVIII (la idea de un individuo aislado y natural) precisamente desde una perspectiva histórica. Argumenta que este individuo no es un punto de partida, sino un "resultado histórico" de la disolución de las sociedades feudales. Su método es genealógico: rastrea el origen de las categorías económicas y sociales para desnaturalizarlas.', 'fuente': 'Examen articulacion de saberes 1 preguntas.pdf'},
+            {'pregunta': 'De acuerdo a Anthony Giddens, las ciencias sociales:', 'opciones': ['Son una forma inédita de separar tiempo y espacio.', 'Desempeñan un papel fundamental en la reflexividad de la modernidad.', 'Constituyen el principal factor en el que se apoyan las señales simbólicas.'], 'respuesta': 'Desempeñan un papel fundamental en la reflexividad de la modernidad.', 'justificacion': 'Giddens sostiene que el conocimiento producido por las ciencias sociales no se queda en el ámbito académico. Al ser divulgado, es absorbido por la sociedad y utilizado por las personas para reflexionar sobre sus propias vidas y prácticas, alterando así la misma realidad que las ciencias sociales estudian. Esto es un ejemplo clave de la reflexividad institucional.', 'fuente': 'Parcial 1 Modulo 1 ejemplos preguntas.pdf'},
+            {'pregunta': 'En referencia a la psicoterapia, Giddens afirma que no es apenas un medio para hacer frente a nuestras angustias, sino que también es:', 'opciones': ['Una forma de disciplinamiento propia de la modernidad tardía.', 'Una nueva forma de socialización.', 'Una expresión de la reflexividad del yo (self).'], 'respuesta': 'Una expresión de la reflexividad del yo (self).', 'justificacion': 'Para Giddens, la psicoterapia es un fenómeno intrínsecamente moderno. Refleja la necesidad del "yo" de convertirse en un "proyecto reflejo". La terapia es un espacio donde el individuo examina y reconstruye activamente su propia biografía e identidad, lo cual es una manifestación paradigmática de la reflexividad del yo en la modernidad tardía.', 'fuente': 'Parcial 1 Modulo 1 ejemplos preguntas.pdf'},
+            {'pregunta': 'En la "Introducción a la crítica de la economía política" Marx sostiene que toda forma de producción engendra sus formas jurídicas. Esto explica que:', 'opciones': ['La forma de gobierno no es ajena ni independiente al modo de producción.', 'Bajo la forma del "estado de derecho" no puede existir ninguna forma de injusticia social.', 'La policía moderna es mejor garantía de la producción que el derecho del más fuerte.'], 'respuesta': 'La forma de gobierno no es ajena ni independiente al modo de producción.', 'justificacion': 'Esta es una idea central del materialismo histórico. Marx afirma que la "superestructura" (instituciones jurídicas, políticas, etc.) de una sociedad está determinada por su "base" económica (el modo de producción). Por lo tanto, cada modo de producción (feudal, capitalista) genera las instituciones jurídicas y las formas de gobierno que necesita para mantenerse y reproducirse.', 'fuente': 'Parcial 1 Modulo 1 ejemplos preguntas.pdf'},
+            {'pregunta': 'Cuando Ana María Fernández plantea que la antinomia individuo-sociedad opera como un a priori conceptual, ¿a qué se refiere?', 'opciones': ['A que es una discusión previa al inicio del trabajo grupal que se resuelve colectivamente.', 'A que nuestra forma de entender y posicionarnos muchas veces forma parte no explicitada de nuestro trabajo y forma de entender el fenómeno.', 'A que la antinomia se diluye a medida que transcurre el trabajo y no tiene un peso relativo.'], 'respuesta': 'A que nuestra forma de entender y posicionarnos muchas veces forma parte no explicitada de nuestro trabajo y forma de entender el fenómeno.', 'justificacion': 'Un "a priori conceptual" es un supuesto implícito, no cuestionado, que organiza la manera en que una disciplina piensa sus objetos. Fernández sostiene que la oposición individuo-sociedad funciona de esta manera en el campo grupal: determina de antemano lo que es posible pensar, las áreas de visibilidad e invisibilidad, y cómo se interpretarán las experiencias grupales, operando como un marco de pensamiento naturalizado.', 'fuente': 'Revision parcial Art 1 2022.pdf'},
+            {'pregunta': 'De acuerdo al pensamiento de De Brasi, la división fundamental que tiñe todas nuestras reflexiones y prácticas es:', 'opciones': ['La que pasa por separar lo subjetivo de lo objetivo.', 'Aquella que establece una división entre teoría y práctica.', 'La que separa alma y cuerpo.'], 'respuesta': 'La que pasa por separar lo subjetivo de lo objetivo.', 'justificacion': 'De Brasi identifica esta como la "censura básica que inunda todas nuestras reflexiones". Sostiene que esta separación fundamental, que establece relaciones de dependencia y hegemonía entre los polos, se asume como un principio incuestionable y es la raíz de otros dualismos como adentro/afuera o individuo/sociedad.', 'fuente': 'Examen articulacion de saberes 1 preguntas.pdf'},
+            {'pregunta': 'Para Anthony Giddens, los sistemas expertos:', 'opciones': ['Emplean modos de conocimiento técnico cuya validez depende de quienes lo practican.', 'Se extienden a las relaciones sociales y a la intimidad del yo (self).', 'Tienden a desestructurar la identidad del yo (self).'], 'respuesta': 'Se extienden a las relaciones sociales y a la intimidad del yo (self).', 'justificacion': 'Giddens aclara que los sistemas expertos no se limitan a áreas tecnológicas (como la ingeniería). Se extienden a las relaciones sociales (terapia de pareja, por ejemplo) y a la "intimidad del yo", donde psicólogos, médicos y otros expertos influyen en la construcción reflexiva de la identidad personal.', 'fuente': 'Examen articulacion de saberes 1 preguntas.pdf'},
+            {'pregunta': 'En el texto de Ana María Fernández se plantea que la categorización de los grupos como intermediarios:', 'opciones': ['Lleva implícito cierto concepto operativo.', 'Corresponde al campo de la sociología.', 'Es dejado de lado en nuevos dispositivos como ser la psicología de los grupos.'], 'respuesta': 'Lleva implícito cierto concepto operativo.', 'justificacion': 'Fernández discute la noción de los grupos como "campos de mediaciones" o "intermediarios" entre lo singular y lo colectivo. Aunque critica esta noción por mantener la separación, reconoce que es una categoría que intenta "resolver" la tensión. Esta idea tiene un carácter operativo, es decir, es un concepto que se usa para intervenir y analizar la dimensión grupal.', 'fuente': 'Examen articulacion de saberes 1 preguntas.pdf'},
+            {'pregunta': '¿Qué destaca Foucault de Nietzsche, Freud y Marx en su ponencia de 1964?', 'opciones': ['Que los tres cambiaron la naturaleza del signo.', 'Que los tres pusieron en evidencia la influencia de la moral cristiana en la filosofía moderna.', 'Que los tres complementan los desarrollos del pensamiento racional.'], 'respuesta': 'Que los tres cambiaron la naturaleza del signo.', 'justificacion': 'La tesis central de Foucault en esta ponencia es que estos tres autores no simplemente multiplicaron los signos o dieron nuevos sentidos, sino que "han cambiado, en realidad, la naturaleza del signo, y modificado la manera como el signo en general podría ser interpretado". El signo deja de ser una representación benévola para convertirse en una interpretación que oculta y que debe ser descifrada con sospecha.', 'fuente': 'Examen articulacion de saberes 1 preguntas.pdf'},
+            {'pregunta': 'Según Raggio el individuo deriva en gran medida de:', 'opciones': ['La aparición -con el capitalismo emergente- del mercado, en el cual la fuerza de trabajo se ve obligada a circular para ofrecerse como mercancía.', 'La lógica del feudo, en el cual se destaca la familia como unidad productiva.', 'Los desarrollos de la psicología, que ubican al psiquismo como objeto de estudio.'], 'respuesta': 'La aparición -con el capitalismo emergente- del mercado, en el cual la fuerza de trabajo se ve obligada a circular para ofrecerse como mercancía.', 'justificacion': 'Raggio, siguiendo a Marx, vincula directamente el surgimiento del individuo a las transformaciones económicas. La disolución de las formas feudales libera al trabajador de la tierra, convirtiendo su fuerza de trabajo en una mercancía que debe vender individualmente en el mercado. Esta nueva realidad económica es la base material para la aparición del "individuo" como formación subjetiva.', 'fuente': 'Preguntas de Articulación 1 con Respuestas-Correctas!-2.pdf'},
+            {'pregunta': 'Para Alejandro Raggio, la importancia de Pichón-Rivière radica en que:', 'opciones': ['La noción de vínculo permite separar conceptualmente la realidad material de los desvíos del subjetivismo.', 'La noción de vínculo permite discriminar la radical diferencia entre el Aparato Psíquico y las condiciones sociales.', 'La noción de vínculo permite abordar una relación directa entre estructura social y configuración del mundo interno del sujeto.'], 'respuesta': 'La noción de vínculo permite abordar una relación directa entre estructura social y configuración del mundo interno del sujeto.', 'justificacion': 'Raggio considera que, aunque las propuestas de la psicología social rioplatense no superaron completamente el dualismo, fueron "bastante más inteligentes". Destaca a Pichón-Rivière porque su noción de "vínculo" fue un intento de abordar la "relación entre estructura social y configuración del mundo interno del sujeto", buscando un concepto que articulara ambos polos en lugar de solo ver influencias externas.', 'fuente': 'Revision parcial Art 1 2022.pdf'},
+            {'pregunta': '¿Cuál es el principal objetivo teórico que propone Juan Carlos de Brasi en su artículo "Crítica del dualismo"?', 'opciones': ['Intentar incorporar los dualismos a las teorizaciones existentes sobre la problemática grupal.', 'Cuestionar las divisiones y mostrar su carácter de obstáculo para el conocimiento.', 'Crear nuevas arquitecturas conceptuales que permitan unir lo dividido.'], 'respuesta': 'Cuestionar las divisiones y mostrar su carácter de obstáculo para el conocimiento.', 'justificacion': 'De Brasi critica las divisiones dualistas (subjetivo/objetivo, adentro/afuera, etc.) que impregnan el pensamiento occidental. Sostiene que estas divisiones, una vez naturalizadas, se convierten en "obstáculos" para un conocimiento más complejo de la realidad. Su objetivo es deconstruir estas separaciones artificiales.', 'fuente': 'Creada por IA'},
+        ],
+        '2': [
+            // Módulo 2
+            {'pregunta': 'En el texto de Foucault se hace referencia a Freud diciendo que éste identifica tres grandes heridas narcisistas en la cultura occidental, siendo una de ellas:', 'opciones': ['La herida hecha por el propio Freud cuando enuncia la existencia de la neurosis y la sexualidad infantil.', 'La herida causada por Marx por su interpretación de la racionalidad del capitalismo.', 'La que provocó Darwin cuando planteó su teoría evolucionista.'], 'respuesta': 'La que provocó Darwin cuando planteó su teoría evolucionista.', 'justificacion': 'Foucault, citando a Freud, menciona tres grandes "heridas narcisistas". El propio Freud, en "Una dificultad del psicoanálisis", detalla estas tres afrentas: la cosmológica (Copérnico), la biológica (Darwin, que nos mostró que descendemos del reino animal) y la psicológica (Freud mismo, con el inconsciente).', 'fuente': 'Preguntas Articulacion de Saberes 1 2023 Modalidad Libre.pdf'},
+            {'pregunta': '¿Por qué se plantea que Marx, Nietzsche y Freud muestran que no hay un sujeto fundante?', 'opciones': ['Porque los tres autores critican el antropocentrismo moderno.', 'Porque para ellos el fundamento solo lo puede constituir una esencia.', 'Porque los tres descomponen el teocentrismo medieval.'], 'respuesta': 'Porque los tres autores critican el antropocentrismo moderno.', 'justificacion': 'Estos tres "maestros de la sospecha" critican la idea moderna de un sujeto soberano y unificado, que era el centro (antropos) del conocimiento. Marx lo muestra como "el conjunto de las relaciones sociales"; Freud lo revela como dividido por el inconsciente; y Nietzsche lo deconstruye como una ficción gramatical. Juntos, disuelven al sujeto trascendental del racionalismo.', 'fuente': 'Preguntas Articulacion de Saberes 1 2023 Modalidad Libre.pdf'},
+            {'pregunta': 'La concepción de sujeto en el pensamiento de Marx es entendida como:', 'opciones': ['El conjunto de vínculos afectivos que el sujeto establece desde su nacimiento.', 'La existencia de una esencia propia de cada sujeto.', 'El conjunto de las relaciones sociales.'], 'respuesta': 'El conjunto de las relaciones sociales.', 'justificacion': 'En sus "Tesis sobre Feuerbach", Marx critica explícitamente la idea de una esencia humana abstracta. Para él, la esencia humana "es, en su realidad, el conjunto de las relaciones sociales". El sujeto no preexiste a la sociedad, sino que se constituye a través de sus interacciones y su posición dentro de una estructura social e histórica determinada.', 'fuente': 'Preguntas Articulacion de Saberes 1 2023 Modalidad Libre.pdf'},
+            {'pregunta': 'Michel Foucault en "La verdad y las formas jurídicas" estudia las formas jurídicas en el sentido de:', 'opciones': ['Legitimar al derecho como fuente de justicia.', 'Concebirlas como formas empleadas por nuestra sociedad para definir tipos de subjetividad, formas de saber y relaciones entre el hombre y la verdad.', 'Fundar doctrina a partir de la jurisprudencia.'], 'respuesta': 'Concebirlas como formas empleadas por nuestra sociedad para definir tipos de subjetividad, formas de saber y relaciones entre el hombre y la verdad.', 'justificacion': 'Foucault no estudia las formas jurídicas para validar el derecho, sino como un lugar privilegiado donde se forman y se definen "reglas de juego" para la producción de la verdad. Argumenta que a partir de prácticas sociales, como las penales, se definen "tipos de subjetividad, dominios de objeto, tipos de saber".', 'fuente': 'Preguntas Articulacion de Saberes 1 2023 Modalidad Libre.pdf'},
+            {'pregunta': 'Cuando Foucault, en "La verdad y las formas jurídicas", aborda el problema del sujeto de conocimiento afirma que:', 'opciones': ['El sujeto del conocimiento trasciende los diversos momentos de la historia.', 'El sujeto de conocimiento posee una historia, al igual que la verdad misma.', 'El sujeto de conocimiento es aquel por el cual la verdad se da en la historia.'], 'respuesta': 'El sujeto de conocimiento posee una historia, al igual que la verdad misma.', 'justificacion': 'Foucault critica la filosofía tradicional que ve al sujeto del conocimiento como algo dado y universal. Propone que "el sujeto de conocimiento tiene una historia". Este sujeto no es una entidad preexistente, sino que se forma a través de las prácticas sociales, políticas y económicas que también producen las "verdades" de una época.', 'fuente': 'Preguntas Articulacion de Saberes 1 2023 Modalidad Libre.pdf'},
+            {'pregunta': 'En la Introducción a "Psicología de las masas y análisis del yo", Freud plantea, a propósito de la "pulsión social", que:', 'opciones': ['Se puede homologar al instinto de manada (herd instinct).', 'Los comienzos de su formación pueden hallarse en un círculo estrecho, como el de la familia.', 'Depende del número de personas que integren una masa.'], 'respuesta': 'Los comienzos de su formación pueden hallarse en un círculo estrecho, como el de la familia.', 'justificacion': 'Freud cuestiona la idea de que la pulsión social sea un instinto primario. Sugiere que no es originaria y que "los comienzos de su formación pueden hallarse en un círculo más estrecho, como el de la familia". Las relaciones con padres y hermanos son para él fenómenos sociales que sientan las bases para posteriores vínculos colectivos.', 'fuente': 'Preguntas Articulacion de Saberes 1 2023 Modalidad Libre.pdf'},
+            {'pregunta': 'Según Freud, uno de nuestros grandes errores consiste en:', 'opciones': ['Identificar los instintos (pulsiones) con nuestra vida anímica.', 'Identificar nuestra sexualidad con los procesos psicológicos inconscientes.', 'Identificar lo "anímico" con lo "consciente".'], 'respuesta': 'Identificar lo "anímico" con lo "consciente".', 'justificacion': 'La tercera "herida narcisista" que describe Freud se basa precisamente en romper esta identificación. El psicoanálisis demuestra que gran parte de la vida anímica ("lo anímico") es inconsciente y escapa al dominio de la conciencia. Por lo tanto, es un error equiparar la totalidad de la psique con la parte consciente de ella.', 'fuente': 'Preguntas Articulacion de Saberes 1 2023 Modalidad Libre.pdf'},
+            {'pregunta': 'Según Nietzsche, en el tratado II de "La genealogía de la moral", el sentimiento de culpa tiene su origen en:', 'opciones': ['La relación entre compradores y vendedores, acreedores y deudores.', 'La relación entre amos y esclavos.', 'La relación entre madre e hijo.'], 'respuesta': 'La relación entre compradores y vendedores, acreedores y deudores.', 'justificacion': 'Nietzsche rastrea el concepto alemán de "culpa" (Schuld) hasta su raíz material en la palabra "deudas" (Schulden). Argumenta que la idea de obligación personal y culpa nació en la relación contractual entre acreedor y deudor, donde el no pagar una deuda generaba el derecho del acreedor a infligir dolor como compensación.', 'fuente': 'Preguntas Articulacion de Saberes 1 2023 Modalidad Libre.pdf'},
+            {'pregunta': 'En cuanto a la mala conciencia, Nietzsche la describe como el resultado de:', 'opciones': ['La descarga de los instintos hacia fuera.', 'El hombre encontrándose sólo analizando sus pensamientos.', 'El proceso de vuelta hacia dentro de los propios instintos.'], 'respuesta': 'El proceso de vuelta hacia dentro de los propios instintos.', 'justificacion': 'Nietzsche sostiene que la mala conciencia es una "profunda enfermedad" que el hombre contrajo al entrar en la sociedad y la paz, viéndose forzado a reprimir sus instintos salvajes que antes descargaba hacia afuera. Esta energía vuelta contra uno mismo, esta crueldad y persecución interior, es el origen de la mala conciencia.', 'fuente': 'Preguntas Articulacion de Saberes 1 2023 Modalidad Libre.pdf'},
+            {'pregunta': 'De acuerdo a Eira y Romano, los modos de subjetivación son:', 'opciones': ['Las formas por las cuales la ciencia pierde eficacia y objetividad.', 'Esas modalidades desde las cuales se constituyen tanto los objetos como los sujetos.', 'Aquellos modos que hacen a los sujetos a diferencia de los modos de objetivación.'], 'respuesta': 'Esas modalidades desde las cuales se constituyen tanto los objetos como los sujetos.', 'justificacion': 'En su texto, Eira y Romano explican que el estudio de las formaciones subjetivas implica analizar los "modos de subjetivación", que son "esas modalidades desde las cuales se constituyen tanto los objetos como los sujetos". Retomando a Foucault, señalan que los modos de subjetivación y objetivación se desarrollan mutuamente.', 'fuente': 'Preguntas Articulacion de Saberes 1 2023 Modalidad Libre.pdf'},
+            {'pregunta': 'Según Marx, la teoría materialista de que los hombres son producto de las circunstancias y de la educación:', 'opciones': ['Olvida que los hombres no son capaces de modificar dichas circunstancias.', 'Olvida que son los hombres, precisamente, los que hacen que cambien las circunstancias.', 'Se presenta a los sujetos como formas de construir nuevas modalidades de comunidad.'], 'respuesta': 'Olvida que son los hombres, precisamente, los que hacen que cambien las circunstancias.', 'justificacion': 'En la tercera tesis sobre Feuerbach, Marx critica esta versión del materialismo por ser pasiva. Señala que "olvida que son los hombres, precisamente, los que hacen que cambien las circunstancias y que el propio educador necesita ser educado". Para Marx, la coincidencia de la modificación de las circunstancias y la actividad humana solo puede entenderse como "práctica revolucionaria".', 'fuente': 'ARTICULACIONES JULIO 2022 EXAMEN PROP 2.pdf'},
+            {'pregunta': 'Michel Foucault ha sostenido que para Nietzsche:', 'opciones': ['Las palabras no indican un significado; imponen interpretaciones.', 'Hay que apoderarse de las interpretaciones para llegar al significado original del signo.', 'Los signos preceden a las interpretaciones, estas los contaminan.'], 'respuesta': 'Las palabras no indican un significado; imponen interpretaciones.', 'justificacion': 'En su ponencia "Nietzsche, Freud, Marx", Foucault cita a Nietzsche para explicar que las palabras no son neutras. "Nietzsche afirma que las palabras han sido inventadas siempre por las clases superiores; ellas no indican un significado: imponen una interpretación". El lenguaje es, en sí mismo, un acto de poder.', 'fuente': 'ARTICULACIONES JULIO 2022 EXAMEN PROP 2.pdf'},
+            {'pregunta': 'Freud, en "Psicología de las masas y análisis del yo", plantea que "desde el comienzo mismo la psicología individual es simultáneamente psicología social". Esto significa que:', 'opciones': ['La primacía de la psicología individual sobre la psicología social.', 'Lo social influye sobre lo individual, presuponiendo un sujeto psíquico preexistente.', 'La relevancia del otro (como modelo, objeto, enemigo) en la constitución de lo que podemos llamar psicología individual.'], 'respuesta': 'La relevancia del otro (como modelo, objeto, enemigo) en la constitución de lo que podemos llamar psicología individual.', 'justificacion': 'Freud argumenta que la psicología individual no puede prescindir de los vínculos con otros. "En la vida anímica del individuo, el otro cuenta, con total regularidad, como modelo, como objeto, como auxiliar y como enemigo". Por lo tanto, la constitución misma del psiquismo individual es un fenómeno social.', 'fuente': 'Examen Art I Feb 2024.pdf'},
+            {'pregunta': 'En el artículo de Gabriel Eira y Javier Romano se hace referencia al "giro lingüístico". Este movimiento supone:', 'opciones': ['El nacimiento de nuevas disciplinas como la lingüística.', 'Que la literatura y la novela alimentan nuevos lenguajes.', 'Que el lenguaje pasa de tener el rol de representar la realidad para ejercer la función de construir realidad.'], 'respuesta': 'Que el lenguaje pasa de tener el rol de representar la realidad para ejercer la función de construir realidad.', 'justificacion': 'El "giro lingüístico" es un movimiento en las ciencias sociales que cambia la concepción del lenguaje. En lugar de verlo como un medio para reflejar una realidad preexistente, se entiende que el lenguaje tiene una función activa en la construcción de esa realidad. Los autores mencionan que la obra de Berger y Luckmann se aplicó en este contexto.', 'fuente': 'Examen Art I Feb 2024.pdf'},
+            {'pregunta': 'Según plantea Foucault en "La verdad y las formas jurídicas", las prácticas sociales producen:', 'opciones': ['Al sujeto.', 'Las instituciones.', 'Los procesos de investigación.'], 'respuesta': 'Al sujeto.', 'justificacion': 'Para Foucault, el sujeto no es una entidad preexistente. Las prácticas sociales (jurídicas, médicas, penales, etc.) no actúan sobre un sujeto ya dado, sino que lo constituyen. Son estas prácticas las que definen, clasifican y moldean al individuo, produciendo así al sujeto de una determinada época.', 'fuente': 'ARTICULACIONES JULIO 2022 EXAMEN PROP 2.pdf'},
+            {'pregunta': 'En el artículo de Gabriel Eira y Javier Romano se sostiene que durante el siglo XIX Marx y Engels señalaron que:', 'opciones': ['La filosofía se sirve de la teología para desentrañar el sistema de creencias.', 'Las sociedades rurales organizan su sistema de creencias en base a la influencia de la revolución urbana.', 'Los sistemas de creencias sobre la realidad se desprenden de las condiciones sociales y económicas en las cuales estos sistemas se inscriben.'], 'respuesta': 'Los sistemas de creencias sobre la realidad se desprenden de las condiciones sociales y económicas en las cuales estos sistemas se inscriben.', 'justificacion': 'Esta es la base del materialismo histórico. Eira y Romano señalan a Marx y Engels como precursores de la sociología del conocimiento al afirmar que las ideas, creencias y la "conciencia" (la superestructura) no son autónomas, sino que están determinadas por la base material, es decir, las condiciones sociales y económicas de producción.', 'fuente': 'ARTICULACIONES JULIO 2022 EXAMEN PROP 2.pdf'},
+            {'pregunta': 'En su ponencia sobre Marx, Nietzsche y Freud (1964), Michel Foucault ha señalado que:', 'opciones': ['A partir del siglo XIX, los signos se encadenan en una red inagotable, infinita, porque hay una apertura irreductible.', 'A partir del siglo XIX, los signos se alejan de la interpretación falaz para acercarse a la realidad objetiva.', 'A partir del siglo XIX, los signos abandonan los sesgos ideológicos para corresponderse con la realidad.'], 'respuesta': 'A partir del siglo XIX, los signos se encadenan en una red inagotable, infinita, porque hay una apertura irreductible.', 'justificacion': 'Foucault argumenta que con los "maestros de la sospecha", la interpretación se vuelve una tarea infinita. Esto no se debe a que haya infinitas semejanzas (como en el Renacimiento), sino a que "hay una apertura irreductible". Como no hay un significado original y todo es ya interpretación, la cadena de desciframiento no tiene un punto final.', 'fuente': 'Preguntas prácticas Arti.docx'},
+            {'pregunta': 'Según Nietzsche en "La genealogía de la moral", ¿cómo se forjó la memoria en el ser humano?', 'opciones': ['A través de acuerdos sociales basados en el contrato.', 'Como fruto de la evolución biológica de la especie.', 'Con sangre, martirios y sacrificios.'], 'respuesta': 'Con sangre, martirios y sacrificios.', 'justificacion': 'Nietzsche argumenta que para vencer el olvido y crear un animal capaz de prometer, se utilizó una "mnemotécnica" brutal. Afirma: "Para que algo permanezca en la memoria se lo graba a fuego; sólo lo que no cesa de doler permanece en la memoria". La memoria se forjó a través de los castigos y rituales más crueles.', 'fuente': 'Revision parcial Art 1 2022.pdf'},
+            {'pregunta': 'En "Una dificultad del psicoanálisis", Freud plantea que la terapia psicoanalítica consigue:', 'opciones': ['Eliminar por completo las pulsiones sexuales.', 'Someter el proceso represivo a una revisión y guiar el conflicto hacia un mejor desenlace.', 'Fortalecer el yo para que controle totalmente al inconsciente.'], 'respuesta': 'Someter el proceso represivo a una revisión y guiar el conflicto hacia un mejor desenlace.', 'justificacion': 'Freud no busca eliminar las pulsiones, sino resolver el conflicto patógeno. Describe que la terapia "consigue entonces someter el proceso represivo {proceso de desalojo} a una revisión y guiar el conflicto hacia un mejor desenlace, conciliable con la salud", permitiendo una satisfacción más saludable de las pulsiones.', 'fuente': 'Creada por IA'},
+            {'pregunta': '¿Cuál es la crítica principal de Foucault al marxismo tradicional en "La verdad y las formas jurídicas"?', 'opciones': ['Que subestima el poder de la clase obrera.', 'Que su análisis económico es incorrecto.', 'Que concibe la ideología como un velo que oculta una verdad a un sujeto de conocimiento preexistente.'], 'respuesta': 'Que concibe la ideología como un velo que oculta una verdad a un sujeto de conocimiento preexistente.', 'justificacion': 'Foucault critica la noción marxista de ideología porque presupone un sujeto de conocimiento puro al que las condiciones económicas "velan" o "perturban". Para Foucault, no hay un sujeto previo; las condiciones políticas y económicas "son aquello a través de lo cual se forman los sujetos de conocimiento y, en consecuencia, las relaciones de verdad".', 'fuente': 'Creada por IA'},
+            {'pregunta': 'Según Nietzsche, en el tratado II de "La genealogía de la moral", el "golpe de genio del cristianismo" en la evolución de la mala conciencia fue:', 'opciones': ['La invención del pecado de la carne y su articulación en el desarrollo.', 'Ofrecer el perdón a través del sacrificio de Dios mismo por la deuda del hombre.', 'La promesa de una recompensa en el más allá para los que sufren.'], 'respuesta': 'Ofrecer el perdón a través del sacrificio de Dios mismo por la deuda del hombre.', 'justificacion': 'Nietzsche describe la espiral de la culpa que culmina en el cristianismo. El "golpe de genio" es la solución paradójica que ofrece: la deuda con Dios se ha vuelto impagable, así que es el acreedor (Dios) quien se sacrifica por amor a su deudor. Es un alivio momentáneo que, sin embargo, profundiza la lógica de la deuda y el sacrificio.', 'fuente': 'Examen Art I Feb 2024.pdf (adaptada)'},
+            {'pregunta': 'Para Foucault, ¿qué es la "invención" (Erfindung) en el pensamiento de Nietzsche?', 'opciones': ['Un descubrimiento progresivo de una verdad preexistente.', 'Una ruptura que tiene un comienzo pequeño, bajo y a menudo inconfesable.', 'Un acto de creación divina que da origen al conocimiento.'], 'respuesta': 'Una ruptura que tiene un comienzo pequeño, bajo y a menudo inconfesable.', 'justificacion': 'Foucault destaca que Nietzsche usa "invención" (Erfindung) en lugar de "origen" (Ursprung) para señalar que el conocimiento no emerge de una esencia noble y pura. Su comienzo es "bajo, mezquino, inconfesable". El conocimiento no es un desarrollo natural, sino una "invención" producto de la lucha y el compromiso entre los instintos.', 'fuente': 'Creada por IA'},
+        ],
+        '3': [
+            // Módulo 3
+            {'pregunta': 'La transformación tecnológica digital, para Franco Berardi, ha puesto en marcha dos procesos diferentes pero integrados:', 'opciones': ['La puesta en red y la diseminación del proceso de trabajo en islas productivas.', 'La función de mando localizada territorialmente y la dirección gerencial.', 'El analfabetismo digital del cognitariado y la irrelevancia de los algoritmos.'], 'respuesta': 'La puesta en red y la diseminación del proceso de trabajo en islas productivas.', 'justificacion': 'Berardi explica que la tecnología digital ha impulsado dos procesos simultáneos: la "puesta en red", que coordina fragmentos de trabajo en un flujo de información único, y la "diseminación del proceso de trabajo" en un "archipiélago infinito de islas productivas" que, aunque parecen autónomas (freelancers), están coordinadas y dependen de ese flujo centralizado.', 'fuente': 'Preguntas Articulacion de Saberes 1 2023 Modalidad Libre.pdf'},
+            {'pregunta': 'De acuerdo con Berardi, la empresa en la acepción contemporánea:', 'opciones': ['Implica repetición y acción ejecutiva.', 'Se opone a la política.', 'Tiende cada vez más a volverse parte del sujeto.'], 'respuesta': 'Tiende cada vez más a volverse parte del sujeto.', 'justificacion': 'Berardi argumenta que, a diferencia del trabajo industrial, donde el trabajador se sentía alienado, el trabajador cognitivo dedica a la producción sus competencias singulares y creativas. En consecuencia, la empresa "tiende a ser el núcleo pulsante del deseo, el objeto de una inversión que ya no es sólo económica, sino psíquica, de deseo". El trabajo se vuelve una parte esencial de la identidad.', 'fuente': 'Preguntas Articulacion de Saberes 1 2023 Modalidad Libre.pdf'},
+            {'pregunta': '¿Cuál sería la estrategia que Ema López identifica para generar posiciones críticas ante los modos de subjetivación capitalista?', 'opciones': ['Generar una ruptura radical con el sistema.', 'Generar una distancia entre el deseo y el objeto de satisfacción.', 'Mimetizar el deseo con el objeto de satisfacción.'], 'respuesta': 'Generar una distancia entre el deseo y el objeto de satisfacción.', 'justificacion': 'Ema López, desde una perspectiva psicoanalítica, sugiere que la resistencia no está en encontrar un deseo "auténtico" fuera del sistema, sino en la capacidad de interrumpir el circuito de goce. Esto implica generar una "distancia" o un "no" al empuje del superyó capitalista a la satisfacción inmediata, abriendo un espacio para la reflexión y la creación de otros posibles.', 'fuente': 'Preguntas Articulacion de Saberes 1 2023 Modalidad Libre.pdf'},
+            {'pregunta': '¿Qué tipo de sujeto produce el modo de subjetivación capitalista según Ema López?', 'opciones': ['Un sujeto autónomo y que presupone su libre elección.', 'Un sujeto esclavo de las imposiciones del capitalismo.', 'Sujetos sin sujetamiento neoliberal.'], 'respuesta': 'Un sujeto autónomo y que presupone su libre elección.', 'justificacion': 'Ema López argumenta que el capitalismo contemporáneo promueve un ideal de sujeto basado en el liberalismo: "individuos autónomos, unificados y autosuficientes". Este sujeto opera bajo la ilusión de la "libertad de elección", aunque esta elección se dé en un marco de opciones ya dadas por el sistema. Este ideal funciona como un "fetiche" que oculta la precariedad real.', 'fuente': 'Preguntas Articulacion de Saberes 1 2023 Modalidad Libre.pdf'},
+            {'pregunta': '¿Cuáles son los imperativos que proponen las culturas terapéuticas según la crítica que hace Papalini sobre estas?', 'opciones': ['La sociabilidad y el sentido comunitario.', 'Los imperativos más importantes son el ser feliz y el estar bien.', 'La importancia de la autoridad disciplinar de la psicología.'], 'respuesta': 'Los imperativos más importantes son el ser feliz y el estar bien.', 'justificacion': 'Vanina Papalini critica la "cultura terapéutica" contemporánea (autoayuda, coaching) por proponer imperativos que se alinean con las demandas del neocapitalismo. Los más destacados son la obligación de "ser feliz" y "estar bien" de manera constante, patologizando estados de ánimo como la tristeza, que son vistos como fallos personales que deben ser gestionados.', 'fuente': 'Preguntas Articulacion de Saberes 1 2023 Modalidad Libre.pdf'},
+            {'pregunta': 'Papalini trabaja con el concepto de neoprudencialismo como:', 'opciones': ['Un sujeto que se autoprovee y hace del ahorro un principio de vida.', 'Una nueva modulación de la gubernamentalidad que desplaza las funciones públicas y las vuelve objeto de acciones privadas.', 'Una modulación de la gubernamentalidad que acentúa lo que el sujeto sabe hacer en su vida laboral.'], 'respuesta': 'Una nueva modulación de la gubernamentalidad que desplaza las funciones públicas y las vuelve objeto de acciones privadas.', 'justificacion': 'El neoprudencialismo es una lógica de gobierno (gubernamentalidad) neoliberal. En su faz política, "desplaza las funciones públicas y las vuelve objeto de acciones privadas". La responsabilidad de la seguridad, el empleo, la salud, etc., se transfiere al individuo. El sujeto "neoprudente" es aquel que se autorregula y gestiona su vida como si fuera una empresa.', 'fuente': 'Preguntas Articulacion de Saberes 1 2023 Modalidad Libre.pdf'},
+            {'pregunta': 'Ramírez y Anzaldúa (2014) afirman que:', 'opciones': ['El término de subjetivación permite considerar al sujeto como un devenir y no como un producto.', 'El proceso de subjetivación obstaculiza el conocimiento científico.', 'La subjetivación es el resultado de la contaminación ideológica del conocimiento objetivo.'], 'respuesta': 'El término de subjetivación permite considerar al sujeto como un devenir y no como un producto.', 'justificacion': 'Los autores explican que utilizan el término "subjetivación" para poner "énfasis en el proceso de constitución y modelamiento" del sujeto. Al hacerlo, se alejan de una visión estática y conciben al sujeto no como un "producto" final y determinado, sino como un "devenir" en constante formación, modelado en la trama entre la psique y el orden histórico-social.', 'fuente': 'Preguntas Articulacion de Saberes 1 2023 Modalidad Libre.pdf'},
+            {'pregunta': 'Ramírez y Anzaldúa (2014) sostienen que las tecnologías digitales:', 'opciones': ['No logran transformar las modalidades naturales de expresión de los sujetos.', 'Operan desde un plano ficticio que nada tiene que ver con la existencia cotidiana.', 'Crean una disposición a la vida, regulan las percepciones y posibilitan modos distintos de expresión de los vínculos.'], 'respuesta': 'Crean una disposición a la vida, regulan las percepciones y posibilitan modos distintos de expresión de los vínculos.', 'justificacion': 'Los autores argumentan que la tecnología digital no es un plano separado de la vida, sino que "trastoca fundamentalmente los modos de vínculo con la naturaleza, los otros y con uno mismo", acelera los tiempos, desvanece los límites entre lo público y lo privado e inaugura nuevos modos de aprendizaje. En resumen, crean una nueva forma de "estar en el mundo".', 'fuente': 'Preguntas Articulacion de Saberes 1 2023 Modalidad Libre.pdf'},
+            {'pregunta': 'Según Ema López, el capitalismo contemporáneo propone continuamente un tipo de experiencia marcada por:', 'opciones': ['El individualismo y la fragmentación que nos homogeneíza en nuestras diferencias.', 'Un lazo social mínimo cimentado en la solidaridad.', 'La repetición en serie de un mismo modelo ideal de clase y género.'], 'respuesta': 'El individualismo y la fragmentación que nos homogeneíza en nuestras diferencias.', 'justificacion': 'Ema López sostiene que el capitalismo "propone un tipo de experiencia marcada por el individualismo y la fragmentación". Aunque fomenta las "diferencias" como una forma de liberación, estas son reducidas a un "mero deslizamiento entre fragmentos de lo que no cambia", es decir, nos vuelve homogéneos en nuestra condición de consumidores fragmentados.', 'fuente': 'ARTICULACIONES JULIO 2022 EXAMEN PROP 2.pdf'},
+            {'pregunta': '¿Cómo articula Ema López el concepto de Super-Yo para pensar los modos de subjetivación del capitalismo?', 'opciones': ['Lo toma como el mandato social del capitalismo en el deber de goce de consumir.', 'Lo toma como un sujeto voraz que consume sin discriminación.', 'Lo propone como un camino intersubjetivo que nos lleva a generar la prohibición de consumir.'], 'respuesta': 'Lo toma como el mandato social del capitalismo en el deber de goce de consumir.', 'justificacion': 'Ema López retoma la relectura que hace Lacan del Super-Yo. Para Lacan, en la sociedad de consumo, el Super-Yo ya no es la instancia prohibitiva ("No gozarás"), sino que se convierte en un imperativo feroz que ordena gozar: "¡Goza!". Este es el "mandato social capitalista que nos empuja a sentirnos obligados a gozar de modo absoluto y sin límite".', 'fuente': 'ARTICULACIONES JULIO 2022 EXAMEN PROP 2.pdf'},
+            {'pregunta': 'Para Papalini el peso de las demandas dirigidas a los sujetos contemporáneos:', 'opciones': ['Tiene como correlato el aumento de las crisis en el plano de la subjetividad.', 'Genera el fortalecimiento de las redes sociales y la búsqueda de acciones comunes.', 'Promueven determinaciones sociales que serán la génesis de un sujeto autónomo.'], 'respuesta': 'Tiene como correlato el aumento de las crisis en el plano de la subjetividad.', 'justificacion': 'Papalini argumenta que las exigencias del neocapitalismo (ser proactivo, creativo, feliz, adaptable) generan una enorme presión sobre los individuos. Esta carga tiene como consecuencia directa el aumento de las crisis subjetivas, la angustia, el estrés y la fatiga, lo que a su vez alimenta la demanda de la "cultura terapéutica".', 'fuente': 'ARTICULACIONES JULIO 2022 EXAMEN PROP 2.pdf'},
+            {'pregunta': 'De acuerdo a los aportes de Vanina Papalini la consolidación contemporánea de una cultura terapéutica se debe entre otros factores a:', 'opciones': ['Las demandas y exigencias a las que los sujetos deben hacer frente en la actualidad.', 'Que existe una mayor posesión de capital económico.', 'Que las terapias psicológicas han sido incluidas en las prestaciones sanitarias básicas.'], 'respuesta': 'Las demandas y exigencias a las que los sujetos deben hacer frente en la actualidad.', 'justificacion': 'La "cultura terapéutica" surge como una respuesta a las nuevas "demandas y exigencias" del capitalismo. Ofrece recursos y estrategias para que los sujetos puedan "adaptarse" y gestionar los malestares (estrés, fatiga, crisis) generados por las propias condiciones del sistema, como la necesidad de ser siempre productivo y feliz.', 'fuente': 'ARTICULACIONES JULIO 2022 EXAMEN PROP 2.pdf'},
+            {'pregunta': 'A partir del análisis de Papalini sobre la gubernamentalidad y las tecnologías del yo, la "cultura terapéutica" es:', 'opciones': ['Un nuevo dispositivo de la gubernamentalidad contemporánea.', 'Una práctica que promueve una mayor libertad.', 'Un recurso que permite resignificar la cultura tradicional.'], 'respuesta': 'Un nuevo dispositivo de la gubernamentalidad contemporánea.', 'justificacion': 'Papalini analiza la "cultura terapéutica" (autoayuda, etc.) como un "nuevo dispositivo de la gubernamentalidad contemporánea". A través de estas "tecnologías del yo", el poder neoliberal no necesita reprimir, sino que conduce las conductas de los sujetos, quienes se auto-gobiernan para adaptarse a las exigencias del sistema.', 'fuente': 'ARTICULACIONES JULIO 2022 EXAMEN PROP 2.pdf'},
+            {'pregunta': 'Según Berardi los trabajadores high tech:', 'opciones': ['Consideran el trabajo como fundamental en sus vidas, la parte más singular y personalizada.', 'Están completamente desafectados de su trabajo, viéndolo como una obligación.', 'Son fácilmente intercambiables debido a la homogeneidad de sus tareas.'], 'respuesta': 'Consideran el trabajo como fundamental en sus vidas, la parte más singular y personalizada.', 'justificacion': 'Berardi contrasta al trabajador industrial, para quien el trabajo era una "muerte temporal", con los trabajadores *high tech*. Estos últimos tienden a considerar el trabajo "como la parte más esencial de sus vidas, la parte más singular y la más personalizada", ya que invierten en él su creatividad y competencias intelectuales.', 'fuente': 'Preguntas de Articulación 1 con Respuestas-Correctas!-2.pdf'},
+            {'pregunta': 'Berardi en "La Fábrica de la Infelicidad" señala que el tiempo aparentemente liberado debido a la automatización en el trabajo:', 'opciones': ['Se ha convertido en tiempo de ocio y desarrollo personal.', 'Se convierte en tiempo de trabajo intelectual absorbido por el ciberespacio.', 'Ha llevado a una reducción general de la jornada laboral.'], 'respuesta': 'Se convierte en tiempo de trabajo intelectual absorbido por el ciberespacio.', 'justificacion': 'Berardi argumenta que la promesa de que la tecnología reduciría el tiempo de trabajo no se cumplió. El tiempo de trabajo industrial disminuyó, pero el tiempo liberado "se ha convertido en cibertiempo, absorbido por el trabajo mental en el ciberespacio". La conexión permanente borra los límites entre trabajo y vida.', 'fuente': 'Preguntas de Articulación 1 con Respuestas-Correctas!-2.pdf'},
+            {'pregunta': 'Ema López, analizando la noción liberal de sujeto, sostiene que esta funciona como un fetiche. Esto es así en tanto:', 'opciones': ['Permite soportar el modo de subjetivación capitalista en su empuje de fragmentación, incertidumbre e incompletud.', 'El sujeto liberal autónomo es el único que logra desprenderse de los sistemas de dominación.', 'Es correlativo a un sujeto que solo encuentra resguardo narcisista en su identidad autónoma.'], 'respuesta': 'Permite soportar el modo de subjetivación capitalista en su empuje de fragmentación, incertidumbre e incompletud.', 'justificacion': 'Un fetiche, en sentido psicoanalítico, es un objeto que vela una falta. Para Ema López, el ideal del sujeto autónomo y libre funciona como un fetiche porque nos protege de la angustia de la fragmentación e incertidumbre que el propio capitalismo genera. Nos da la ilusión de ser sujetos completos y en control, permitiendo así soportar y reproducir el sistema.', 'fuente': 'Examen Art I Feb 2024.pdf'},
+            {'pregunta': 'Según (Berardi, 2003) el trabajo cognitivo:', 'opciones': ['Es fundamental el trabajo comunicacional y, asimismo, no implica decrecimiento laboral.', 'Es fundamental el trabajo comunicacional, podría simbolizar el enriquecimiento del trabajo.', 'No es esencial el trabajo de comunicación y por lo tanto decrece en el ámbito laboral.'], 'respuesta': 'Es fundamental el trabajo comunicacional, podría simbolizar el enriquecimiento del trabajo.', 'justificacion': 'Berardi define el trabajo cognitivo esencialmente como "trabajo de comunicación, o bien comunicación puesta a trabajar". La elaboración de signos, la innovación y la creatividad son centrales. Si bien puede ser explotado, también tiene el potencial de ser atractivo y enriquecedor, a diferencia del trabajo industrial repetitivo.', 'fuente': 'Preguntas prácticas Arti.docx'},
+            {'pregunta': '¿Por qué Papalini entiende que los discursos de autoayuda son un mecanismo de biopoder?', 'opciones': ['Porque son discursos coercitivos para que los sujetos promuevan su felicidad.', 'Porque se presentan como modos de subjetivación donde los sujetos son forzados a tomar un rol activo para gestionar su felicidad.', 'Porque se presentan como modos de subjetivación donde los sujetos son convocados a tomar un rol activo para maximizar y gestionar su propia felicidad.'], 'respuesta': 'Porque se presentan como modos de subjetivación donde los sujetos son convocados a tomar un rol activo para maximizar y gestionar su propia felicidad.', 'justificacion': 'El biopoder, para Foucault, no solo reprime, sino que gestiona y maximiza la vida. Papalini aplica esto a la autoayuda: no es una coerción externa, sino una convocatoria a que el sujeto se auto-gobierne ("tecnologías del yo") para maximizar su rendimiento, su bienestar y su felicidad, alineando sus deseos con las necesidades del sistema neoliberal.', 'fuente': 'Preguntas arti 1 1.pdf'},
+            {'pregunta': 'Para Ramírez y Anzaldúa, nuestra actualidad se construye a partir de artefactos tecnológicos que condicionan nuestros procesos de socialización. ¿Cómo los explican desde los conceptos de Castoriadis?', 'opciones': ['La imaginación radical requiere de una capacidad creativa única para hacer posible la socialización.', 'La sociedad se instituye imaginariamente, donde la imaginación es a la vez acción instituyente continua y sutil, y reacción y diferencia de lo instituido.', 'La socialización es un proceso de modelamiento de la psique que requiere una conducta consumista.'], 'respuesta': 'La sociedad se instituye imaginariamente, donde la imaginación es a la vez acción instituyente continua y sutil, y reacción y diferencia de lo instituido.', 'justificacion': 'Los autores usan el concepto de Castoriadis de "imaginario social instituyente" para explicar cómo se crean nuevas formas de vida. La sociedad no está determinada, se auto-crea a través de significaciones imaginarias. Las tecnologías no son solo herramientas, sino que participan de este imaginario, instituyendo nuevas formas de decir (legein) y de hacer (teukhein), es decir, nuevas formas de socialización y subjetividad.', 'fuente': 'Preguntas arti 1 1.pdf'},
+            {'pregunta': '¿Por qué para José Ema López es importante el concepto de "plus de goce" de Lacan para explicar la relación subjetiva con el capitalismo?', 'opciones': ['Porque le permite explicar que los objetos completos generan sufrimiento parcial en el sujeto.', 'Porque funcionan de manera similar en tanto incita a alcanzar la satisfacción a cualquier precio.', 'Para hacernos comprender los procesos patológicos que generan los objetos-mercancía en el sujeto.'], 'respuesta': 'Porque funcionan de manera similar en tanto incita a alcanzar la satisfacción a cualquier precio.', 'justificacion': 'Ema López establece una homología entre la plusvalía de Marx y el plus-de-gozar de Lacan. Ambos funcionan como un "motor impulsor". El plus-de-gozar es esa satisfacción parcial que, en lugar de calmar, relanza el deseo y empuja al sujeto a una búsqueda incesante de un goce total imposible. El capitalismo se acopla a esta lógica, ofreciendo objetos-mercancía que prometen esa satisfacción y mantienen al sujeto en un ciclo de consumo sin fin.', 'fuente': 'Revision parcial Art 1 2022.pdf (adaptada)'},
+            {'pregunta': 'Según Berardi, ¿cuál es la diferencia fundamental entre la "clase virtual" y el "cognitariado"?', 'opciones': ['La clase virtual trabaja en red, mientras que el cognitariado trabaja de forma aislada.', 'La clase virtual se define por eludir su corporeidad social, mientras que el cognitariado es el trabajo cognitivo visto desde su corporeidad y su sufrimiento.', 'La clase virtual es dueña de los medios de producción digital, y el cognitariado no.'], 'respuesta': 'La clase virtual se define por eludir su corporeidad social, mientras que el cognitariado es el trabajo cognitivo visto desde su corporeidad y su sufrimiento.', 'justificacion': 'Berardi critica la noción de "clase virtual" de Pierre Lévy porque "su definición consiste precisamente en el proceso de eludir la propia corporeidad social". En contraste, él propone el término "cognitariado" para referirse al "flujo de trabajo semiótico visto desde el punto de vista de su corporeidad social". El cognitariado tiene necesidades, cuerpo, y sufre el estrés de la explotación de su atención.', 'fuente': 'Creada por IA'},
+            {'pregunta': '¿A qué se refiere Éric Sadin con el concepto de "individuo tirano"?', 'opciones': ['A un líder político autoritario que utiliza las redes sociales para controlar a la población.', 'A un tipo de individuo empoderado por la tecnología digital que impone su perspectiva en un espacio público desregulado, socavando el debate razonado.', 'A un hacker que utiliza la información para desestabilizar gobiernos y corporaciones.'], 'respuesta': 'A un tipo de individuo empoderado por la tecnología digital que impone su perspectiva en un espacio público desregulado, socavando el debate razonado.', 'justificacion': 'Sadin describe al "individuo tirano" no como una figura de poder tradicional, sino como un nuevo tipo de sujeto contemporáneo. Empoderado por la capacidad de expresarse y difundir su opinión a gran escala a través de las redes, este individuo se convierte en una fuerza "tiránica" al imponer su perspectiva subjetiva, a menudo basada en la emoción y la autoafirmación, en un espacio público fragmentado y sin mediaciones, lo que dificulta la construcción de un mundo común.', 'fuente': 'Creada por IA (basada en resumen de "La era del individuo tirano")'}
+        ]
+    };
+
+    // --- LÓGICA DEL JUEGO (Adaptada para Múltiple Opción) ---
+
+    // Referencias a elementos del DOM
+    const pantallaInicio = document.getElementById('pantalla-inicio');
+    const pantallaQuiz = document.getElementById('pantalla-quiz');
+    const pantallaFinal = document.getElementById('pantalla-final');
+    
+    const opcionesDocumentosContainer = document.getElementById('opciones-documentos');
+    const btnIniciar = document.getElementById('btn-iniciar');
+    const errorSeleccion = document.getElementById('error-seleccion');
+
+    const contadorPreguntaEl = document.getElementById('contador-pregunta');
+    const preguntasRestantesEl = document.getElementById('preguntas-restantes');
+    const puntuacionActualEl = document.getElementById('puntuacion-actual');
+    const textoPreguntaEl = document.getElementById('texto-pregunta');
+    const btnLeerPregunta = document.getElementById('btn-leer-pregunta');
+    const iconoVolumenOn = document.getElementById('icono-volumen-on');
+    const iconoVolumenOff = document.getElementById('icono-volumen-off');
+    const opcionesRespuestaContainer = document.getElementById('opciones-respuesta');
+    const feedbackEl = document.getElementById('feedback');
+
+    const mensajeFinalEl = document.getElementById('mensaje-final');
+    const puntuacionFinalTextoEl = document.getElementById('puntuacion-final-texto');
+    const btnReiniciar = document.getElementById('btn-reiniciar');
+    
+    // Variables de estado del juego
+    let preguntasSeleccionadas = [];
+    let preguntaActualIndex = 0;
+    let puntuacion = 0;
+    let btnSiguiente; 
+    let lecturaAutomaticaActivada = false;
+
+    // Función para leer texto en voz alta
+    function leerEnVozAlta(texto, onEndCallback) {
+        speechSynthesis.cancel();
+        if ('speechSynthesis' in window) {
+            const utterance = new SpeechSynthesisUtterance(texto);
+            utterance.lang = 'es-UY'; 
+            utterance.rate = 0.9;
+            if (onEndCallback) {
+                utterance.onend = onEndCallback;
+            }
+            speechSynthesis.speak(utterance);
+        } else {
+            console.warn("Tu navegador no soporta la lectura en voz alta.");
+        }
+    }
+    
+    function toggleLecturaAutomatica() {
+        lecturaAutomaticaActivada = !lecturaAutomaticaActivada;
+        btnLeerPregunta.classList.toggle('activo', lecturaAutomaticaActivada);
+        const onStyle = window.getComputedStyle(iconoVolumenOn);
+        const offStyle = window.getComputedStyle(iconoVolumenOff);
+
+        if(lecturaAutomaticaActivada) {
+            iconoVolumenOn.style.display = 'block';
+            iconoVolumenOff.style.display = 'none';
+            leerEnVozAlta(textoPreguntaEl.textContent);
+        } else {
+            iconoVolumenOn.style.display = 'none';
+            iconoVolumenOff.style.display = 'block';
+            speechSynthesis.cancel();
+        }
+    }
+
+    function popularOpcionesDocumentos() {
+        opcionesDocumentosContainer.innerHTML = '';
+        const modulos = Object.keys(preguntas_db).sort();
+        modulos.forEach(mod => {
+            const checkboxId = `mod-${mod}`;
+            const label = document.createElement('label');
+            label.setAttribute('for', checkboxId);
+            label.textContent = `Módulo ${mod}`;
+
+            const checkbox = document.createElement('input');
+            checkbox.type = 'checkbox';
+            checkbox.id = checkboxId;
+            checkbox.value = mod;
+
+            opcionesDocumentosContainer.appendChild(checkbox);
+            opcionesDocumentosContainer.appendChild(label);
+        });
+    }
+
+    function iniciarJuego() {
+        const checkboxes = document.querySelectorAll('#opciones-documentos input[type="checkbox"]:checked');
+        if (checkboxes.length === 0) {
+            errorSeleccion.style.display = 'block';
+            return;
+        }
+        errorSeleccion.style.display = 'none';
+        
+        preguntasSeleccionadas = [];
+        checkboxes.forEach(cb => {
+            preguntasSeleccionadas.push(...preguntas_db[cb.value]);
+        });
+        
+        preguntasSeleccionadas.sort(() => Math.random() - 0.5);
+
+        puntuacion = 0;
+        preguntaActualIndex = 0;
+        
+        pantallaInicio.style.display = 'none';
+        pantallaQuiz.style.display = 'block';
+        pantallaFinal.style.display = 'none';
+        
+        mostrarSiguientePregunta();
+    }
+
+    function mostrarSiguientePregunta() {
+        speechSynthesis.cancel();
+        if (preguntaActualIndex >= preguntasSeleccionadas.length) {
+            mostrarPantallaFinal();
+            return;
+        }
+
+        limpiarFeedback();
+        const preguntaActual = preguntasSeleccionadas[preguntaActualIndex];
+        const preguntasTotales = preguntasSeleccionadas.length;
+        
+        contadorPreguntaEl.textContent = `Pregunta ${preguntaActualIndex + 1} de ${preguntasTotales}`;
+        preguntasRestantesEl.textContent = `Quedan: ${preguntasTotales - (preguntaActualIndex)}`;
+        puntuacionActualEl.textContent = `Puntuación: ${puntuacion}`;
+        textoPreguntaEl.textContent = preguntaActual.pregunta;
+
+        opcionesRespuestaContainer.innerHTML = '';
+        
+        // Mezclar opciones
+        const opcionesMezcladas = [...preguntaActual.opciones].sort(() => Math.random() - 0.5);
+
+        opcionesMezcladas.forEach(opcion => {
+            const boton = document.createElement('button');
+            boton.className = 'btn';
+            boton.textContent = opcion;
+            boton.addEventListener('click', () => seleccionarRespuesta(boton));
+            opcionesRespuestaContainer.appendChild(boton);
+        });
+
+        if (lecturaAutomaticaActivada) {
+            let textoCompleto = preguntaActual.pregunta + ". Opciones: " + opcionesMezcladas.join('. ');
+            leerEnVozAlta(textoCompleto);
+        }
+    }
+
+    function seleccionarRespuesta(botonSeleccionado) {
+        const botones = opcionesRespuestaContainer.querySelectorAll('.btn');
+        botones.forEach(btn => btn.disabled = true);
+
+        const preguntaActual = preguntasSeleccionadas[preguntaActualIndex];
+        const respuestaUsuario = botonSeleccionado.textContent;
+        const esCorrecto = respuestaUsuario === preguntaActual.respuesta;
+        
+        let textoFeedback;
+
+        if (esCorrecto) {
+            puntuacion++;
+            botonSeleccionado.classList.add('correcto');
+            textoFeedback = `Correcto. ${preguntaActual.justificacion}`;
+            feedbackEl.innerHTML = `
+                <h3>¡Correcto!</h3>
+                <p class="justificacion">${preguntaActual.justificacion}</p>
+                <p class="fuente-pregunta">Fuente: ${preguntaActual.fuente}</p>
+            `;
+            feedbackEl.classList.add('correcto');
+        } else {
+            botonSeleccionado.classList.add('incorrecto');
+            botones.forEach(btn => {
+                if(btn.textContent === preguntaActual.respuesta) {
+                    btn.classList.add('correcto');
+                }
+            });
+            textoFeedback = `Incorrecto. ${preguntaActual.justificacion}`;
+            feedbackEl.innerHTML = `
+                <h3>Incorrecto</h3>
+                <p class="justificacion">${preguntaActual.justificacion}</p>
+                <p class="fuente-pregunta">Fuente: ${preguntaActual.fuente}</p>
+            `;
+            feedbackEl.classList.add('incorrecto');
+        }
+        
+        puntuacionActualEl.textContent = `Puntuación: ${puntuacion}`;
+        preguntaActualIndex++;
+
+        if (lecturaAutomaticaActivada) {
+            leerEnVozAlta(textoFeedback, crearBotonSiguiente);
+        } else {
+            crearBotonSiguiente();
+        }
+    }
+    
+    function crearBotonSiguiente() {
+        btnSiguiente = document.createElement('button');
+        btnSiguiente.id = 'btn-siguiente';
+        btnSiguiente.className = 'btn';
+        if (preguntaActualIndex >= preguntasSeleccionadas.length) {
+            btnSiguiente.textContent = 'Ver Resultados Finales';
+        } else {
+            btnSiguiente.textContent = 'Siguiente Pregunta';
+        }
+        feedbackEl.appendChild(btnSiguiente);
+        btnSiguiente.addEventListener('click', mostrarSiguientePregunta);
+    }
+
+    function limpiarFeedback() {
+        feedbackEl.innerHTML = '';
+        feedbackEl.className = '';
+    }
+
+    function mostrarPantallaFinal() {
+        pantallaQuiz.style.display = 'none';
+        pantallaFinal.style.display = 'block';
+        
+        const total = preguntasSeleccionadas.length;
+        const porcentaje = total > 0 ? Math.round((puntuacion / total) * 100) : 0;
+        
+        puntuacionFinalTextoEl.textContent = `Tu puntuación final es: ${puntuacion} / ${total} (${porcentaje}%)`;
+        
+        let mensaje;
+        if (porcentaje === 100) {
+            mensaje = '¡Felicidades! ¡Dominio total!';
+        } else if (porcentaje >= 70) {
+            mensaje = '¡Muy buen trabajo! Estás listo/a.';
+        } else if (porcentaje >= 50) {
+             mensaje = '¡Buen intento! Sigue repasando.';
+        } else {
+            mensaje = 'Necesitas estudiar más. ¡Ánimo!';
+        }
+        mensajeFinalEl.textContent = mensaje;
+        
+        if (lecturaAutomaticaActivada) {
+            leerEnVozAlta(`Fin del juego. Tu puntuación final es ${puntuacion} de ${total}. ${mensaje}`);
+        }
+    }
+
+    // Event Listeners
+    btnIniciar.addEventListener('click', iniciarJuego);
+    btnReiniciar.addEventListener('click', () => {
+        speechSynthesis.cancel();
+        pantallaFinal.style.display = 'none';
+        pantallaInicio.style.display = 'block';
+        popularOpcionesDocumentos();
+    });
+    btnLeerPregunta.addEventListener('click', toggleLecturaAutomatica);
+    
+    // Inicializar la aplicación
+    popularOpcionesDocumentos();
+    // Forzar la visualización inicial correcta de los iconos de volumen
+    iconoVolumenOn.style.display = 'none';
+    iconoVolumenOff.style.display = 'block';
+
+    </script>
 </body>
 </html>
